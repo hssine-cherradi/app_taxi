@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
+
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="css/materialize.min.css">
+
+<!-- Compiled and minified JavaScript -->
+<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="js/style.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+ <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8V2NjER6nkOUN77Fq3AQPP9NDJz6U7GY&callback=initMap&v=3.26&language=fr&region=MA"></script>
+
+<script src="js/materialize.min.js"></script>
+<!-- <script src="js/h5utils.js"></script>-->
+</head>
+<body>
+<header>
+  <nav>
+    <div class="container">
+      <div class="nav-wrapper">
+        <a href="index.html" class="brand-logo">Taxi</a>
+        <ul class="right side-nav" id="nav-mobile">
+          <li class="hide-on-small-only"><a href="#" data-activates='nav-mobile'><i class="material-icons">arrow_back</i></a></li>
+		  
+		
+          <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+          <li><div class="divider"></div></li>
+      
+          <li><a class="waves-effect" href="#!"><i class="material-icons">cloud</i>Third Link With Waves</a></li>
+        </ul>
+        <a class="button-collapse" href="#" data-activates='nav-mobile'><i class="material-icons">menu</i></a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main><div class="container">
+	<div class="row">
+
+		<div class="col s12 m12 l12">
+		
+		<center>
+
+  <p> 
+  <div class="encours">
+  Vérification en cours &nbsp;
+  </div>
+  
+   <div class="succes" style="display: none;">
+  Bien connecté &nbsp;
+  </div>
+  
+  <div class="erreur" style="display: none;">
+  Erreur connexion GPS ! &nbsp;
+  </div>
+  </p> 
+<section id="wrapper">
+<div id="carbonads-container">
+<div class="carbonad">
+<div id="azcarbon">
+</div>
+</div>
+</div>
+
+    <article>
+    <p> <span></span></p>
+    </article>
+
+</section>
+
+<div class="div_info">
+<br><br><br>
+
+<br>
+<span>Latitude :</span><span id="latitude"></span>
+<br>
+<span>Longitude :</span><span id="longitude"></span>
+<br>
+<span>Pays :</span><span id="pays"></span>
+<br>
+<span>Ville :</span><span id="ville"></span>
+<br>
+<span>Adresse  :</span><span id="adresse"></span>
+<br>
+</div>
+<br>
+</center>
+
+		</div>
+	
+	</div>
+</main>
+ <script>
+   $('.button-collapse').sideNav({
+      menuWidth: 300, // Default is 300
+      edge: 'left', // Choose the horizontal origin
+      closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
+      draggable: true, // Choose whether you can drag to open on touch screens,
+      onOpen: function(el) { /* Do Stuff* / }, // A function to be called when sideNav is opened
+      onClose: function(el) { /* Do Stuff*/ }, // A function to be called when sideNav is closed
+    }
+  );
+ </script>
+  <script>
+
+
+
+function success(position) {
+
+$(".encours").hide();
+$(".succes").show();
+$(".erreur").hide();
+  
+  var mapcanvas = document.createElement('div');
+  mapcanvas.id = 'mapcanvas';
+  mapcanvas.style.height = '400px';
+  mapcanvas.style.width = '80%';
+  document.querySelector('article').appendChild(mapcanvas);
+  
+  var latitude=position.coords.latitude;
+  var longitude=position.coords.longitude;
+	
+  $("#latitude").empty().append(latitude);
+  $("#longitude").empty().append(longitude);
+	
+	
+	var geocoder;
+	geocoder = new google.maps.Geocoder();
+	var latlng = new google.maps.LatLng( latitude, longitude);
+
+	geocoder.geocode(
+	{'latLng': latlng}, 
+	function(results, status) {
+	if (status == google.maps.GeocoderStatus.OK) {
+			if (results[0]) {
+				var add= results[0].formatted_address ;
+				console.log(add);
+				var  value=add.split(",");
+				
+				var adresse=value[0];
+				var ville=value[1];
+				var pays=value[2];
+				
+	
+	$("#adresse").empty().append(adresse);
+    $("#ville").empty().append(ville);
+	$("#pays").empty().append(pays);
+			}
+			else  {
+				alert("address not found");
+			}
+	}
+	 else {
+		alert("Geocoder failed due to: " + status);
+	}
+	}
+	);
+
+
+	/*
+	 var url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='+latitude+','+longitude+'&sensor=true'; 
+	 $("#url").empty().append(url);
+	  $.ajax({
+        				url     : url,
+        				type    : 'GET',
+        				dataType: 'json',
+        				data    : {},
+        				success : function(data){						
+  
+    var address = data.results[2];
+    var  ville_pays=address.formatted_address;
+	 var adr = data.results[0];
+     var adress=adr.address_components[0].long_name;
+	  var pays_e = data.results[4];
+	  var pays=pays_e.formatted_address;
+	var v_p = ville_pays.split(",");
+	var ville=v_p[0];
+	$("#pays").empty().append(pays);
+    $("#ville").empty().append(ville);
+	$("#adress").empty().append(adress);
+				},
+				error   : function(request){
+					alert("Erreur de connexion au serveur!");
+				}
+	});
+*/
+addMarker(latitude,longitude);
+
+addMarker(34.033520, -5.000533);
+
+}
+
+function error(msg) {
+$(".encours").hide();
+$(".succes").hide();
+$(".erreur").show();
+}
+
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(success, error);
+} else {
+  error('not supported');
+}
+
+
+  
+ // Function for adding a marker to the page.
+ 
+    function addMarker(latitude,longitude) {
+var latlng = new google.maps.LatLng(latitude,longitude);	
+  var myOptions = {
+    zoom: 15,
+    center: latlng,
+    mapTypeControl: false,
+    navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  var map = new google.maps.Map(document.getElementById("mapcanvas"), myOptions);
+
+  
+  var marker = new google.maps.Marker({
+      position: latlng, 
+      map: map, 
+	  icon:'http://www.washndry-concept.com/wp-content/themes/washn-dry/map/marker-small.png',
+      title:"Y"
+  });
+  
+    }
+</script>
+</body>
+</html>
